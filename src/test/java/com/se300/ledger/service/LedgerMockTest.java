@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = {TestSmartStoreApplication.class})
+@SpringBootTest(classes = { TestSmartStoreApplication.class })
 public class LedgerMockTest {
 
     @Autowired
@@ -47,5 +47,14 @@ public class LedgerMockTest {
         assertEquals(0, differences.size());
     }
 
-    //TODO: Create Another Ledger Mock Test
+    // TODO: Create Another Ledger Mock Test
+    @Test
+    public void testGetName() {
+        String expectedName = "Test Ledger";
+        Ledger ledger = new Ledger(expectedName);
+
+        String actualName = ledger.getName();
+
+        assertEquals(expectedName, actualName);
+    }
 }
