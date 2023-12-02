@@ -44,7 +44,6 @@ public class LedgerRestController {
 
     public Transaction getTransaction(String transactionId){
         //TODO: Implement Transaction Retrieval REST Method
-        
         return null;
     }
 
