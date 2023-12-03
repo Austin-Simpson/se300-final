@@ -32,4 +32,5 @@ public class MockTest {
         verify(mary, times(1)).getBalance();
 
     }
+    
 }

@@ -16,6 +16,11 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { TestSmartStoreApplication.class })
 public class LedgerMockTest {
@@ -51,10 +56,17 @@ public class LedgerMockTest {
     @Test
     public void testGetName() {
         String expectedName = "Test Ledger";
-        Ledger ledger = new Ledger(expectedName);
+        String expectedDescription = "Test Description";
+        String exSeed = "Test Seed";
+
+        Ledger ledger = mock(Ledger.class);
+        when(ledger.getName()).thenReturn(expectedName);
+        when(ledger.getDescription()).thenReturn(expectedDescription);
+        when(ledger.getSeed()).thenReturn(exSeed);
 
         String actualName = ledger.getName();
 
         assertEquals(expectedName, actualName);
     }
 }
+

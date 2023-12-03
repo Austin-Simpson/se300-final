@@ -38,8 +38,11 @@ public class LedgerRestMockControllerTest {
     }
 
     @org.junit.jupiter.api.Test
-    public void testGetTransactionById() throws JSONException {
+    public void testGetTransactionById() throws Exception {
 
         //TODO: Implement Transaction Mock Retrieval Test Method
+        mockMvc.perform(get("/transactions/1")).andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.transactionId").value("1"));
     }
 }

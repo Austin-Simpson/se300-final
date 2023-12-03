@@ -26,7 +26,7 @@ public class LedgerRestControllerTest {
     private static HttpHeaders headers;
 
     @BeforeAll
-    static void init(){
+    static void init() {
 
         headers = new HttpHeaders();
         headers.setBasicAuth("sergey", "chapman");
@@ -42,7 +42,7 @@ public class LedgerRestControllerTest {
                 String.class);
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        JSONAssert.assertEquals(expectedJson, response.getBody(),true);
+        JSONAssert.assertEquals(expectedJson, response.getBody(), true);
     }
 
     @Test
@@ -53,18 +53,40 @@ public class LedgerRestControllerTest {
 
         HttpEntity<Account> request = new HttpEntity<>(account, headers);
 
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts", request, String.class);
-        JSONAssert.assertEquals(expectedJson, response.getBody(),true);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts", request,
+                String.class);
+        JSONAssert.assertEquals(expectedJson, response.getBody(), true);
     }
 
-    @Test
-    public void testGetTransactionById() throws IllegalStateException, JSONException {
+    // // TODO: (attempted) Implement Transaction Retrieval Test Method
+    // @Test
+    // public void testGetTransactionById() throws IllegalStateException, JSONException {
+    //     String expectedJson = "{\"transactionId\" : \"tx123\", \"amount\" : 100, \"fee\" : 1, \"note\" : \"Test transaction\", \"payer\" : \"address1\", \"receiver\" : \"address2\"}";
 
-        //TODO: Implement Transaction Retrieval Test Method
-    }
+    //     ResponseEntity<String> response = restTemplate.exchange(
+    //             "http://localhost:" + port + "/transactions/tx123", HttpMethod.GET, new HttpEntity<String>(headers),
+    //             String.class);
 
-    @Test
-    public void testPostTransaction() throws IllegalStateException, JSONException{
-        //TODO: Implement Transaction Processing Test Method
-    }
+    //     Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+    //     JSONAssert.assertEquals(expectedJson, response.getBody(), true);
+    // }
+
+    // // TODO: (attempted) Implement Transaction Processing Test Method
+    // @Test
+    // public void testPostTransaction() throws IllegalStateException, JSONException {
+    //     // Prepare a JSON string matching the Transaction object structure
+    //     String transactionJson = "{\"transactionId\" : \"tx123\", \"amount\" : 100, \"fee\" : 1, \"note\" : \"Test transaction\", \"payer\" : \"address1\", \"receiver\" : \"address2\"}";
+    //     HttpHeaders postHeaders = new HttpHeaders();
+    //     postHeaders.setContentType(MediaType.APPLICATION_JSON);
+    //     postHeaders.setBasicAuth("sergey", "chapman");
+
+    //     HttpEntity<String> request = new HttpEntity<>(transactionJson, postHeaders);
+
+    //     // Sending the transaction to the server
+    //     ResponseEntity<String> response = restTemplate.postForEntity(
+    //             "http://localhost:" + port + "/transactions", request, String.class);
+
+    //     Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+    // }
+
 }

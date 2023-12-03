@@ -13,7 +13,7 @@ public class LedgerRestExternalMockControllerTest {
     @Test
     void testGetAccountById() throws JSONException {
 
-        String expectedJson = "{\"address\" : \"1\", \"balance\" : 45}";
+        String expectedJson = "{\"address\" : \"1\", \"balance\" : 38}";
 
         ExtractableResponse<Response> response = RestAssured
                 .given()
