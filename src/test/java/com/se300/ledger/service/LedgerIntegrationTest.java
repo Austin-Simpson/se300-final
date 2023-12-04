@@ -83,8 +83,6 @@ public class LedgerIntegrationTest {
                 assertEquals(testTransaction, ledger.getTransaction("11"),
                                 "Transaction should be retrievable by ID.");
 
-                // Optionally commit the block and validate the block contents
-                // This step would depend on the implementation details of how blocks are
-                // committed in your ledger.
+
         }
 }
