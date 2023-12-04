@@ -191,4 +191,5 @@ public class TransactionTest {
         assertFalse(transaction1.equals(transaction2), "Transactions with different receivers should not be equal");
     }
 
+
 }

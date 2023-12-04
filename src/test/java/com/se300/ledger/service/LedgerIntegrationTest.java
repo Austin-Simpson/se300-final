@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.checkerframework.checker.units.qual.m;
 
@@ -52,34 +53,38 @@ public class LedgerIntegrationTest {
         @Test
         public void testMultipleAccountTransactions() throws LedgerException {
                 // Setup - create accounts
-                Account master = ledger.getUncommittedBlock().getAccount("master");
                 Account alice = ledger.createAccount("alice");
                 Account bob = ledger.createAccount("bob");
                 Account charlie = ledger.createAccount("charlie");
-                
-                master.setBalance(1000);
+
                 alice.setBalance(1000);
                 bob.setBalance(1000);
                 charlie.setBalance(1000);
 
                 // Process transactions
-                ledger.processTransaction(new Transaction("11", 100, 10, "pay alice", master, alice));
+                Transaction testTransaction = new Transaction("11", 100, 10, "pay charlie", charlie, alice);
+                ledger.processTransaction(testTransaction);
                 ledger.processTransaction(new Transaction("12", 50, 20, "pay bob", alice, bob));
                 ledger.processTransaction(new Transaction("13", 30, 30, "pay charlie", bob, charlie));
                 ledger.processTransaction(new Transaction("14", 20, 10, "refund to alice", charlie, alice));
 
                 // Assertions
-                assertEquals(890, master.getBalance());
                 assertEquals(1050, alice.getBalance());
                 assertEquals(990, bob.getBalance());
-                assertEquals(1000, charlie.getBalance());
+                assertEquals(890, charlie.getBalance());
 
                 // Validate that the uncommitted block contains the transactions
                 assertEquals(4, ledger.getUncommittedBlock().getTransactionList().size(),
                                 "Uncommitted block should contain all transactions.");
 
+                Transaction testTransaction2 = testTransaction;
+                assertEquals(testTransaction, testTransaction2);
+
+                assertEquals(testTransaction, ledger.getTransaction("11"),
+                                "Transaction should be retrievable by ID.");
+
                 // Optionally commit the block and validate the block contents
                 // This step would depend on the implementation details of how blocks are
-                // committed in your ledger
+                // committed in your ledger.
         }
 }

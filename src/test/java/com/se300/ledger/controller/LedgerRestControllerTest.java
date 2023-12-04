@@ -2,6 +2,10 @@ package com.se300.ledger.controller;
 
 import com.se300.ledger.TestSmartStoreApplication;
 import com.se300.ledger.model.Account;
+import com.se300.ledger.model.Transaction;
+import com.se300.ledger.repository.AccountRepository;
+import com.se300.ledger.repository.TransactionRepository;
+
 import org.json.JSONException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -53,40 +57,59 @@ public class LedgerRestControllerTest {
 
         HttpEntity<Account> request = new HttpEntity<>(account, headers);
 
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts", request,
-                String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + port + "/accounts",
+                request, String.class);
+
         JSONAssert.assertEquals(expectedJson, response.getBody(), true);
     }
 
-    // // TODO: (attempted) Implement Transaction Retrieval Test Method
-    // @Test
-    // public void testGetTransactionById() throws IllegalStateException, JSONException {
-    //     String expectedJson = "{\"transactionId\" : \"tx123\", \"amount\" : 100, \"fee\" : 1, \"note\" : \"Test transaction\", \"payer\" : \"address1\", \"receiver\" : \"address2\"}";
+    // TODO: (done?) Implement Transaction Processing Test Method
+    @Autowired
+    private AccountRepository accountRepository;
 
-    //     ResponseEntity<String> response = restTemplate.exchange(
-    //             "http://localhost:" + port + "/transactions/tx123", HttpMethod.GET, new HttpEntity<String>(headers),
-    //             String.class);
+    @Test
+    public void testPostTransaction() throws IllegalStateException, JSONException {
+        // Prepare a JSON string matching the Transaction object structure
 
-    //     Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-    //     JSONAssert.assertEquals(expectedJson, response.getBody(), true);
-    // }
+        String expectedJson = "{\"transactionId\":\"tx123\",\"amount\":90,\"fee\":10,\"note\":\"Test transaction\",\"payer\":{\"address\":\"address1\",\"balance\":900},\"receiver\":{\"address\":\"address2\",\"balance\":1090}}";
+        Account account1 = new Account("address1", 1000);
+        Account account2 = new Account("address2", 1000);
+        accountRepository.save(account1);
+        accountRepository.save(account2);
 
-    // // TODO: (attempted) Implement Transaction Processing Test Method
-    // @Test
-    // public void testPostTransaction() throws IllegalStateException, JSONException {
-    //     // Prepare a JSON string matching the Transaction object structure
-    //     String transactionJson = "{\"transactionId\" : \"tx123\", \"amount\" : 100, \"fee\" : 1, \"note\" : \"Test transaction\", \"payer\" : \"address1\", \"receiver\" : \"address2\"}";
-    //     HttpHeaders postHeaders = new HttpHeaders();
-    //     postHeaders.setContentType(MediaType.APPLICATION_JSON);
-    //     postHeaders.setBasicAuth("sergey", "chapman");
+        Transaction transaction = new Transaction("tx123", 90, 10, "Test transaction", account1, account2);
+        HttpEntity<Transaction> request = new HttpEntity<>(transaction, headers);
 
-    //     HttpEntity<String> request = new HttpEntity<>(transactionJson, postHeaders);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + port + "/transactions",
+                request, String.class);
 
-    //     // Sending the transaction to the server
-    //     ResponseEntity<String> response = restTemplate.postForEntity(
-    //             "http://localhost:" + port + "/transactions", request, String.class);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
 
-    //     Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-    // }
+        JSONAssert.assertEquals(expectedJson, response.getBody(), true);
+    }
+
+    // TODO: (done?) Implement Transaction Retrieval Test Method
+    @Test
+    public void testGetTransactionById() throws IllegalStateException, JSONException {
+
+        String expectedJson = "{\"transactionId\":\"100\",\"amount\":90,\"fee\":10,\"note\":\"Test transaction\",\"payer\":{\"address\":\"address1\",\"balance\":900},\"receiver\":{\"address\":\"address2\",\"balance\":1090}}";
+        Account account1 = new Account("address1", 1000);
+        Account account2 = new Account("address2", 1000);
+        accountRepository.save(account1);
+        accountRepository.save(account2);
+
+        Transaction transaction = new Transaction("100", 90, 10, "Test transaction", account1, account2);
+        HttpEntity<Transaction> request = new HttpEntity<>(transaction, headers);
+
+        ResponseEntity<String> postString = restTemplate.postForEntity("http://localhost:" + port + "/transactions",
+                request, String.class);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:" + port + "/transactions/100", HttpMethod.GET, new HttpEntity<String>(headers),
+                String.class);
+
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        JSONAssert.assertEquals(expectedJson, response.getBody(), true);
+    }
 
 }

@@ -29,4 +29,5 @@ public class SmartStoreApplication {
         SpringApplication.run(SmartStoreApplication.class, args);
 
     }
+
 }

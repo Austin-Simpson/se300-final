@@ -3,6 +3,9 @@ package com.se300.ledger.service;
 import com.se300.ledger.TestSmartStoreApplication;
 import com.se300.ledger.model.Account;
 import com.se300.ledger.repository.AccountRepository;
+import com.se300.ledger.model.Transaction;
+import com.se300.ledger.service.Ledger;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,14 +62,35 @@ public class LedgerMockTest {
         String expectedDescription = "Test Description";
         String exSeed = "Test Seed";
 
-        Ledger ledger = mock(Ledger.class);
-        when(ledger.getName()).thenReturn(expectedName);
-        when(ledger.getDescription()).thenReturn(expectedDescription);
-        when(ledger.getSeed()).thenReturn(exSeed);
+        ledger.setName(expectedName);
+        ledger.setDescription(expectedDescription);
+        ledger.setSeed(exSeed);
 
-        String actualName = ledger.getName();
+        
+        assertEquals(expectedName, ledger.getName());
+        assertEquals(expectedDescription, ledger.getDescription());
+        assertEquals(exSeed, ledger.getSeed());
 
-        assertEquals(expectedName, actualName);
     }
+
+    // @Test
+    // public void testProcessTransaction() throws LedgerException {
+    //     List<Account> list = new ArrayList<Account>();
+    //     Account dummyPayer = new Account("payer", 200);
+    //     Account dummyPayee = new Account("payee", 300);
+    //     list.add(dummyPayer);
+    //     list.add(dummyPayee);
+
+    //     Transaction testTransaction = new Transaction("id1", 90, 10, "test note", dummyPayer, dummyPayee);
+        
+    //     ledger.processTransaction(testTransaction);
+        
+    //     verify(accountRepository, times(1)).save(dummyPayer);
+    //     verify(accountRepository, times(1)).save(dummyPayee);
+    //     assertEquals(110, dummyPayer.getBalance());
+    //     assertEquals(390, dummyPayee.getBalance());
+
+    // }
+
 }
 

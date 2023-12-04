@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
+import java.util.Map.Entry;
+
 import static java.util.Map.*;
 
 /**
@@ -40,6 +42,15 @@ public class Ledger implements LedgerAPI {
         uncommittedBlock.addAccount("master", masterAccount);
         this.accountRepository.save(masterAccount);
     }
+
+    // // NOTE: this works to make an account
+    // @PostConstruct
+    // private void createInitialTransaction() {
+    // Transaction initialTransaction = new Transaction("1", 0, 0, "Initial
+    // Transaction", null, null);
+    // uncommittedBlock.getTransactionList().add(initialTransaction);
+    // this.transactionRepository.save(initialTransaction);
+    // }
 
     /**
      * Create singleton of the Ledger
@@ -190,8 +201,10 @@ public class Ledger implements LedgerAPI {
 
         uncommittedBlock.getTransactionList().add(transaction);
 
-        // TODO: (done) Persist Transaction to the DB
-        transactionRepository.save(transaction);
+        // TODO: (done?) Persist Transaction to the DB
+        this.transactionRepository.save(transaction);
+        this.accountRepository.save(tempPayerAccount);
+        this.accountRepository.save(tempReceiverAccount);
 
         // Check to see if account blocked has reached max size
         if (uncommittedBlock.getTransactionList().size() == 10) {
@@ -231,13 +244,13 @@ public class Ledger implements LedgerAPI {
             // Link to previous block
             uncommittedBlock.setPreviousBlock(committedBlock);
         }
-
+        
         return transaction.getTransactionId();
     }
 
     /**
      * Get Account balance by address
-     * 
+     *  
      * @param address
      * @return Integer representing balance of the Account
      * @throws LedgerException
@@ -303,28 +316,33 @@ public class Ledger implements LedgerAPI {
      * @param transactionId
      * @return Transaction or Null
      */
+
+    // TODO: (done) Refactor to Retrieve Transaction fom the DB
+
     @Override
     public Transaction getTransaction(String transactionId) {
 
-        // TODO: (done) Refactor to Retrieve Transaction fom the DB
+        Optional<Transaction> transaction = transactionRepository.findById(transactionId);
 
-        for (Entry mapElement : blockMap.entrySet()) {
+        return transaction.orElse(null);
 
-            // Finding specific transactions in the committed blocks
-            Block tempBlock = (Block) mapElement.getValue();
-            for (Transaction transaction : tempBlock.getTransactionList()) {
-                if (transaction.getTransactionId().equals(transactionId)) {
-                    return transaction;
-                }
-            }
-        }
-        // Finding specific transactions in the uncommitted block
-        for (Transaction transaction : uncommittedBlock.getTransactionList()) {
-            if (transaction.getTransactionId().equals(transactionId)) {
-                return transaction;
-            }
-        }
-        return transactionRepository.findById(transactionId).orElse(null);
+        // for (Entry mapElement : blockMap.entrySet()) {
+
+        // // Finding specific transactions in the committed blocks
+        // Block tempBlock = (Block) mapElement.getValue();
+        // for (Transaction transaction : tempBlock.getTransactionList()) {
+        // if (transaction.getTransactionId().equals(transactionId)) {
+        // return transaction;
+        // }
+        // }
+        // }
+        // // Finding specific transactions in the uncommitted block
+        // for (Transaction transaction : uncommittedBlock.getTransactionList()) {
+        // if (transaction.getTransactionId().equals(transactionId)) {
+        // return transaction;
+        // }
+        // }
+        // return null;
     }
 
     /**
