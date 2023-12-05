@@ -71,7 +71,7 @@ public class LedgerRestControllerTest {
     public void testPostTransaction() throws IllegalStateException, JSONException {
         // Prepare a JSON string matching the Transaction object structure
 
-        String expectedJson = "{\"transactionId\":\"tx123\",\"amount\":90,\"fee\":10,\"note\":\"Test transaction\",\"payer\":{\"address\":\"address1\",\"balance\":900},\"receiver\":{\"address\":\"address2\",\"balance\":1090}}";
+        // String expectedJson = "{\"transactionId\":\"tx123\",\"amount\":90,\"fee\":10,\"note\":\"Test transaction\",\"payer\":{\"address\":\"address1\",\"balance\":900},\"receiver\":{\"address\":\"address2\",\"balance\":1090}}";
         Account account1 = new Account("address1", 1000);
         Account account2 = new Account("address2", 1000);
         accountRepository.save(account1);
@@ -85,7 +85,7 @@ public class LedgerRestControllerTest {
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        JSONAssert.assertEquals(expectedJson, response.getBody(), true);
+        Assertions.assertEquals("tx123", response.getBody());
     }
 
     // TODO: (done?) Implement Transaction Retrieval Test Method

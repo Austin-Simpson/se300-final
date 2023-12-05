@@ -61,17 +61,16 @@ public class LedgerRestController {
         @Operation(summary = "Process Transaction", tags = { "transactions" })
         @ApiResponses({
                         @ApiResponse(responseCode = "200", description = "Transaction processed successfully", content = {
-                                        @Content(mediaType = "application/json") }),
+                                @Content(schema = @Schema(implementation = Transaction.class), mediaType = "application/json") }),
                         @ApiResponse(responseCode = "400", description = "Invalid transaction data", content = {
                                         @Content(schema = @Schema()) }),
                         @ApiResponse(responseCode = "500", content = {
                                         @Content(schema = @Schema()) })
         })
         @PostMapping("/transactions")
-        public Transaction processTransaction(@RequestBody Transaction transaction) throws LedgerException {
+        public String processTransaction(@RequestBody Transaction transaction) throws LedgerException {
                 
-                String transactionID = ledger.processTransaction(transaction);
-                return ledger.getTransaction(transactionID);
+                return ledger.processTransaction(transaction);
 
         }
 

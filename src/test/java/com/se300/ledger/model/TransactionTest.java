@@ -14,14 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = { TestSmartStoreApplication.class })
 public class TransactionTest {
 
-    // TODO: Implement Transaction Test
-
-    // void setTransactionId(String transactionId)
-    // void setAmount(Integer amount)
-    // void setFee(Integer fee)
-    // void setNote(String note)
-    // void setPayer(Account payer)
-    // setReceiver(Account receiver)
+    // TODO: (done) Implement Transaction Test
 
     @Test
     void testTransaction() {
@@ -191,5 +184,17 @@ public class TransactionTest {
         assertFalse(transaction1.equals(transaction2), "Transactions with different receivers should not be equal");
     }
 
+    @Test
+    void testTransactionEquality() {
+        Account payer = new Account("payerAddress", 100);
+        Account receiver = new Account("receiverAddress", 50);
+        Transaction transaction1 = new Transaction("123", 50, 5, "Test Transaction", payer, receiver);
+        Transaction transaction2 = new Transaction("123", 50, 5, "Test Transaction", payer, receiver);
+        Transaction transaction3 = new Transaction("456", 75, 8, "Another Transaction", payer, receiver);
+        // Check equality for two transactions with the same ID and data
+        assertEquals(transaction1, transaction2);
+        // Check inequality for two transactions with different IDs or data
+        assertNotEquals(transaction1, transaction3);
+    }
 
 }

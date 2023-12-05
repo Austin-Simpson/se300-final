@@ -43,13 +43,17 @@ public class Ledger implements LedgerAPI {
         this.accountRepository.save(masterAccount);
     }
 
-    // // NOTE: this works to make an account
+    // // NOTE: this works to make an transaction
     // @PostConstruct
-    // private void createInitialTransaction() {
-    // Transaction initialTransaction = new Transaction("1", 0, 0, "Initial
-    // Transaction", null, null);
+    // private void createInitialTransactions() {
+    //     // if get is called without a transaction, create this one
+
+    // Account master = uncommittedBlock.getAccount("master");
+    // Transaction initialTransaction = new Transaction("0", 90, 10, "Initial Transaction", master, master);
     // uncommittedBlock.getTransactionList().add(initialTransaction);
     // this.transactionRepository.save(initialTransaction);
+    // // commit block
+
     // }
 
     /**

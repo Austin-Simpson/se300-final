@@ -48,14 +48,18 @@ public class LedgerIntegrationTest {
 
                 assertEquals(600, mary.getBalance());
         }
+        
+        // new ledger
+        @Autowired
+        private Ledger ledger2;
 
         // TODO: (done) Create Another Ledger Integration Test
         @Test
         public void testMultipleAccountTransactions() throws LedgerException {
                 // Setup - create accounts
-                Account alice = ledger.createAccount("alice");
-                Account bob = ledger.createAccount("bob");
-                Account charlie = ledger.createAccount("charlie");
+                Account alice = ledger2.createAccount("alice");
+                Account bob = ledger2.createAccount("bob");
+                Account charlie = ledger2.createAccount("charlie");
 
                 alice.setBalance(1000);
                 bob.setBalance(1000);
@@ -63,10 +67,10 @@ public class LedgerIntegrationTest {
 
                 // Process transactions
                 Transaction testTransaction = new Transaction("11", 100, 10, "pay charlie", charlie, alice);
-                ledger.processTransaction(testTransaction);
-                ledger.processTransaction(new Transaction("12", 50, 20, "pay bob", alice, bob));
-                ledger.processTransaction(new Transaction("13", 30, 30, "pay charlie", bob, charlie));
-                ledger.processTransaction(new Transaction("14", 20, 10, "refund to alice", charlie, alice));
+                ledger2.processTransaction(testTransaction);
+                ledger2.processTransaction(new Transaction("12", 50, 20, "pay bob", alice, bob));
+                ledger2.processTransaction(new Transaction("13", 30, 30, "pay charlie", bob, charlie));
+                ledger2.processTransaction(new Transaction("14", 20, 10, "refund to alice", charlie, alice));
 
                 // Assertions
                 assertEquals(1050, alice.getBalance());
@@ -74,13 +78,13 @@ public class LedgerIntegrationTest {
                 assertEquals(890, charlie.getBalance());
 
                 // Validate that the uncommitted block contains the transactions
-                assertEquals(4, ledger.getUncommittedBlock().getTransactionList().size(),
+                assertEquals(4, ledger2.getUncommittedBlock().getTransactionList().size(),
                                 "Uncommitted block should contain all transactions.");
 
                 Transaction testTransaction2 = testTransaction;
                 assertEquals(testTransaction, testTransaction2);
 
-                assertEquals(testTransaction, ledger.getTransaction("11"),
+                assertEquals(testTransaction, ledger2.getTransaction("11"),
                                 "Transaction should be retrievable by ID.");
 
 
