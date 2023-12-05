@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = {SmartStoreApplication.class})
 public class AccountRepositoryIntegrationTest {
 
-    //TODO: Implement Account Repository Integration Test
+    //TODO: (done) Implement Account Repository Integration Test
         @Autowired
     private AccountRepository accountRepository;
 

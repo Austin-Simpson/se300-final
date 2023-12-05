@@ -32,7 +32,7 @@ public class LedgerRestExternalMockControllerTest {
     @Test
     public void testGetTransactionById() throws JSONException {
 
-        //TODO: (done?) Implement Transaction External Retrieval Test Method
+        //TODO: (done) Implement Transaction External Retrieval Test Method
 
         String expectedJson = "{\"transactionId\":\"11\",\"amount\":45,\"fee\":10,\"note\":\"This is a test\",\"payer\":{\"address\":\"master\",\"balance\":2147483647},\"receiver\":{\"address\":\"sergey\",\"balance\":10}}";
         

@@ -11,9 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-// @SpringBootTest(classes = {SmartStoreApplication.class})
-
-@Repository
+@SpringBootTest(classes = {SmartStoreApplication.class})
 public class FakeAccountRepository implements AccountRepository{
 
     //TODO: (done) Implement Fake Account Repository

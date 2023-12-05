@@ -205,7 +205,7 @@ public class Ledger implements LedgerAPI {
 
         uncommittedBlock.getTransactionList().add(transaction);
 
-        // TODO: (done?) Persist Transaction to the DB
+        // TODO: (done) Persist Transaction to the DB
         this.transactionRepository.save(transaction);
         this.accountRepository.save(tempPayerAccount);
         this.accountRepository.save(tempReceiverAccount);

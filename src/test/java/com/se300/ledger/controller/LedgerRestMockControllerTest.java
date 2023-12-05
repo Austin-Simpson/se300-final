@@ -1,7 +1,9 @@
 package com.se300.ledger.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.se300.ledger.TestSmartStoreApplication;
 import com.se300.ledger.model.Account;
+import com.se300.ledger.model.Transaction;
 
 import org.json.JSONException;
 import org.junit.Before;
@@ -9,8 +11,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -41,33 +45,37 @@ public class LedgerRestMockControllerTest {
                 .andExpect(jsonPath("$.address").value("master"));
     }
 
-    // @Test
-    // public void testGetTransactionById() throws Exception {
-    // String transactionId = "123";
-    // mockMvc.perform(get("/transactions/" + transactionId))
-    // .andExpect(status().isOk())
-    // .andExpect(content().contentType("application/json"))
-    // .andExpect(jsonPath("$.id").value(transactionId))
-    // .andExpect(jsonPath("$.amount").value(50.0)) // Adjust these values based on
-    // your actual transaction data
-    // .andExpect(jsonPath("$.description").value("Test Transaction"));
-    // }
-
     @Test
     public void testProcessAndGetTransactionById() throws Exception {
 
-        mockMvc.perform(post("/transactions")
-                .content(
-                        "{\"transactionId\":\"0\",\"amount\":50,\"fee\":10,\"description\":\"Test Transaction\",\"payer\":{\"address\":\"master\",\"balance\":2147483647},\"payee\":{\"address\":\"master\",\"balance\":2147483647}}")
-                .contentType("application/json"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.transactionId").value("0"));
+        MvcResult payee = mockMvc.perform(post("/accounts")
+                .content(new ObjectMapper().writeValueAsString(new Account("sergey", 0)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
 
-        // TODO:(attempt) Implement Transaction Mock Retrieval Test Method
-        mockMvc.perform(get("/transactions/0")).andExpect(status().isOk())
+        MvcResult payer = mockMvc.perform(get("/accounts/master")).andExpect(status().isOk())
+                .andExpect(content()
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+                
+        Account sergey = new ObjectMapper().readValue(payee.getResponse().getContentAsString(), Account.class);
+        Account master = new ObjectMapper().readValue(payer.getResponse().getContentAsString(), Account.class);
+
+        MvcResult transaction = mockMvc.perform(post("/transactions")
+            .content(new ObjectMapper().writeValueAsString(
+                new Transaction("1", 60, 10, "simple test", master, sergey)))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk()).andReturn();
+        
+        assertEquals("1", transaction.getResponse().getContentAsString());
+
+        
+        // TODO:(done) Implement Transaction Mock Retrieval Test Method
+        mockMvc.perform(get("/transactions/1")).andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.transactionId").value("0"));
+                .andExpect(jsonPath("$.amount").value("60"));
     }
 
 }

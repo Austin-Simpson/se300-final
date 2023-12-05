@@ -42,7 +42,7 @@ public class LedgerRestController {
                 return ledger.getUncommittedBlock().getAccount(address);
         }
 
-        // TODO: (attempt) Implement Transaction Retrieval REST Method
+        // TODO: (done) Implement Transaction Retrieval REST Method
         @Operation(summary = "Retrieve Transaction By ID", tags = { "transactions" })
         @ApiResponses({
                         @ApiResponse(responseCode = "200", content = {
@@ -57,7 +57,7 @@ public class LedgerRestController {
                 return ledger.getTransaction(transactionId);
         }
 
-        // TODO: (done?) Implement Transaction Processing REST Method
+        // TODO: (done) Implement Transaction Processing REST Method
         @Operation(summary = "Process Transaction", tags = { "transactions" })
         @ApiResponses({
                         @ApiResponse(responseCode = "200", description = "Transaction processed successfully", content = {

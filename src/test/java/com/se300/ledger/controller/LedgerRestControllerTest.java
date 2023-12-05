@@ -63,7 +63,7 @@ public class LedgerRestControllerTest {
         JSONAssert.assertEquals(expectedJson, response.getBody(), true);
     }
 
-    // TODO: (done?) Implement Transaction Processing Test Method
+    // TODO: (done) Implement Transaction Processing Test Method
     @Autowired
     private AccountRepository accountRepository;
 
@@ -88,7 +88,7 @@ public class LedgerRestControllerTest {
         Assertions.assertEquals("tx123", response.getBody());
     }
 
-    // TODO: (done?) Implement Transaction Retrieval Test Method
+    // TODO: (done) Implement Transaction Retrieval Test Method
     @Test
     public void testGetTransactionById() throws IllegalStateException, JSONException {
 
