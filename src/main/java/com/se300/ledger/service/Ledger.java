@@ -330,23 +330,6 @@ public class Ledger implements LedgerAPI {
 
         return transaction.orElse(null);
 
-        // for (Entry mapElement : blockMap.entrySet()) {
-
-        // // Finding specific transactions in the committed blocks
-        // Block tempBlock = (Block) mapElement.getValue();
-        // for (Transaction transaction : tempBlock.getTransactionList()) {
-        // if (transaction.getTransactionId().equals(transactionId)) {
-        // return transaction;
-        // }
-        // }
-        // }
-        // // Finding specific transactions in the uncommitted block
-        // for (Transaction transaction : uncommittedBlock.getTransactionList()) {
-        // if (transaction.getTransactionId().equals(transactionId)) {
-        // return transaction;
-        // }
-        // }
-        // return null;
     }
 
     /**
@@ -382,12 +365,6 @@ public class Ledger implements LedgerAPI {
         for (Integer key : blockMap.keySet()) {
             Block block = blockMap.get(key);
 
-            // // Check for Hash Consistency
-            // if (block.getBlockNumber() != 1)
-            //     if (!block.getPreviousHash().equals(block.getPreviousBlock().getHash())) {
-            //         throw new LedgerException("Validate", "Hash Is Inconsistent: "
-            //                 + block.getBlockNumber());
-            //     }
 
             // Check for Transaction Count
             if (block.getTransactionList().size() != 10) {
@@ -395,17 +372,7 @@ public class Ledger implements LedgerAPI {
                         + block.getBlockNumber());
             }
 
-            // for (Transaction transaction : block.getTransactionList()) {
-            //     fees += transaction.getFee();
-            // }
         }
-
-        // int adjustedBalance = totalBalance + fees;
-
-        // // Check for account balances against the total
-        // if (adjustedBalance != Integer.MAX_VALUE) {
-        //     throw new LedgerException("Validate", "Balance Does Not Add Up");
-        // }
 
     }
 
