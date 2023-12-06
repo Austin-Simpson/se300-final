@@ -4,6 +4,7 @@ import com.se300.ledger.SmartStoreApplication;
 import com.se300.ledger.TestSmartStoreApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -300,6 +301,23 @@ public class CompleteTest {
             ledger.getBlock(2);
         });
     }
+
+    @Test
+    public void testGetBlock() throws LedgerException {
+        // process 11 transactions to create blocks
+
+        for (int i = 0; i < 11; i++) {
+            masterAccount = ledger.getUncommittedBlock().getAccount("master");
+            testAccount = ledger.getUncommittedBlock().getAccount("testAccount");
+            ledger.processTransaction(new Transaction("blockTest" + i, 100, 10, "Note" + i, masterAccount, testAccount));
+        }
+        Block block = ledger.getBlock(1);
+
+        assertNotNull(block);
+    }
+
+    // test more of validate
+
 
     // @Test
     // public void applicationContextTest() {
