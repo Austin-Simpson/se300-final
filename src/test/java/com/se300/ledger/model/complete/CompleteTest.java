@@ -1,5 +1,6 @@
 package com.se300.ledger.model.complete;
 
+import com.se300.ledger.SmartStoreApplication;
 import com.se300.ledger.TestSmartStoreApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -24,36 +25,45 @@ import com.se300.ledger.service.LedgerException;
 
 import static org.mockito.Mockito.*;
 
-
-@SpringBootTest(classes = {TestSmartStoreApplication.class})
+@SpringBootTest(classes = { TestSmartStoreApplication.class })
 public class CompleteTest {
 
     /*
+     * //TODO: (X)
      * Must do the following
      * 1. Achieve 100% Test Coverage
      * 2. Produce/Print Identical Results to Command Line DriverTest
      * 3. Produce Quality Report
      */
 
-         // Tests for Ledger.java:
-    private Ledger ledger;
+    // Tests for Ledger.java:
+    private Ledger ledger = Ledger.getInstance("test", "test ledger 2023", "chapman");
 
-    // // Setup method to initialize the Ledger instance before each test
-    // @BeforeEach
-    // public void setUp() throws LedgerException{
-    //     // Using the getInstance() method to get a Ledger instance
-    //     ledger = Ledger.getInstance("test", "test ledger 2023","chapman");
+    Account testAccount = ledger.getUncommittedBlock().getAccount("testAccount");
+    Account masterAccount = ledger.getUncommittedBlock().getAccount("master");
 
-    //     // create 2nd account and first transacation before each test
-        
-    //     Account testAccount = ledger.createAccount("testAccount");
-    //     Account masterAccount = ledger.getUncommittedBlock().getAccount("master");
+    // Setup method to initialize the Ledger instance before each test
+    @BeforeEach
+    public void setUp() throws LedgerException {
+        // Using the getInstance() method to get a Ledger instance
+        ledger = Ledger.getInstance("test", "test ledger 2023", "chapman");
 
-    //     ledger.processTransaction(new Transaction("txId1", 100, 10, "Note1", masterAccount, testAccount));
+        Account testAccount;
+        // check if testAccount is there
+        if (ledger.getUncommittedBlock().getAccount("testAccount") == null) {
+            testAccount = ledger.createAccount("testAccount");
+        } else {
+            testAccount = ledger.getUncommittedBlock().getAccount("testAccount");
+        }
 
-    // }
+        // create 2nd account and first transacation before each test
+        Account masterAccount = ledger.getUncommittedBlock().getAccount("master");
 
-
+        // if first transaction exists, don't create it
+        if (ledger.getTransaction("txId1") == null) {
+            ledger.processTransaction(new Transaction("txId1", 100, 10, "Note1", masterAccount, testAccount));
+        }
+    }
 
     @Test
     public void testSetTransactionId() {
@@ -101,9 +111,9 @@ public class CompleteTest {
 
     // Test for Account.java:
     @Test
-    public void testAccountSetAddress() {
+    public void testAccountSetAddress() throws LedgerException {
         // Create an account with initial address
-        Account account = new Account("innitialAddress", 500);
+        Account account = ledger.createAccount("newTestAccount");
 
         // Set a new address for the account
         account.setAddress("NewAddress101");
@@ -115,20 +125,21 @@ public class CompleteTest {
     // // Test for MerkleTree.java:
     // @Test
     // public void testGetSHA2HexValueException() throws NoSuchAlgorithmException {
-    //     // Use try-with-resources with mockStatic for MessageDigest
-    //     try (MockedStatic<MessageDigest> mdMock = mockStatic(MessageDigest.class)) {
-    //         // Mock the getInstance method to throw an exception
-    //         mdMock.when(() -> MessageDigest.getInstance("SHA-256")).thenThrow(new NoSuchAlgorithmException());
+    // // Use try-with-resources with mockStatic for MessageDigest
+    // try (MockedStatic<MessageDigest> mdMock = mockStatic(MessageDigest.class)) {
+    // // Mock the getInstance method to throw an exception
+    // mdMock.when(() -> MessageDigest.getInstance("SHA-256")).thenThrow(new
+    // NoSuchAlgorithmException());
 
-    //         MerkleTrees merkleTrees = new MerkleTrees(new ArrayList<>());
+    // MerkleTrees merkleTrees = new MerkleTrees(new ArrayList<>());
 
-    //         // As the exception is mocked, calling getSHA2HexValue should now enter the
-    //         // catch block
-    //         String result = merkleTrees.getSHA2HexValue("test");
+    // // As the exception is mocked, calling getSHA2HexValue should now enter the
+    // // catch block
+    // String result = merkleTrees.getSHA2HexValue("test");
 
-    //         // Assert the result
-    //         assertEquals("", result); // as the catch block returns an empty string
-    //     }
+    // // Assert the result
+    // assertEquals("", result); // as the catch block returns an empty string
+    // }
 
     // }
 
@@ -225,14 +236,7 @@ public class CompleteTest {
     @Test
     public void testSetDescription() throws LedgerException {
         // Using the getInstance() method to get a Ledger instance
-        ledger = Ledger.getInstance("test", "test ledger 2023","chapman");
-
-        // create 2nd account and first transacation before each test
-        
-        Account testAccount = ledger.createAccount("testAccount");
-        Account masterAccount = ledger.getUncommittedBlock().getAccount("master");
-
-        ledger.processTransaction(new Transaction("txId1", 100, 10, "Note1", masterAccount, testAccount));
+        ledger = Ledger.getInstance("test", "test ledger 2023", "chapman");
 
         // Setting the description to a new value
         ledger.setDescription("New Description");
@@ -263,7 +267,6 @@ public class CompleteTest {
 
     @Test
     public void testNoteLengthExceedsLimit() {
-
         String longNote = new String(new char[1025]).replace("\0", "A");
         Transaction transaction = new Transaction("txId3", 100, 10, longNote, masterAccount, testAccount);
         assertThrows(LedgerException.class, () -> {
@@ -273,18 +276,9 @@ public class CompleteTest {
 
     @Test
     public void testDuplicateTransactionId() throws LedgerException {
-        // Using the getInstance() method to get a Ledger instance
-        ledger = Ledger.getInstance("test", "test ledger 2023","chapman");
-
-        // create 2nd account and first transacation before each test
-        
-        Account testAccount = ledger.createAccount("testAccount");
-        Account masterAccount = ledger.getUncommittedBlock().getAccount("master");
-
-        ledger.processTransaction(new Transaction("txId1", 100, 10, "Note1", masterAccount, testAccount));
 
         Transaction transaction1 = new Transaction("txId4", 200, 10, "Note1", masterAccount, testAccount);
-        ledger.processTransaction(transaction1); 
+        ledger.processTransaction(transaction1);
 
         Transaction transaction2 = new Transaction("txId4", 200, 15, "Note2", masterAccount, testAccount);
         assertThrows(LedgerException.class, () -> {
@@ -294,20 +288,23 @@ public class CompleteTest {
 
     @Test
     public void testNegativeTransactionAmount() throws LedgerException {
-        // Using the getInstance() method to get a Ledger instance
-        ledger = Ledger.getInstance("test", "test ledger 2023","chapman");
-
-        // create 2nd account and first transacation before each test
-        Account testAccount = ledger.createAccount("testAccount");
-        Account masterAccount = ledger.getUncommittedBlock().getAccount("master");
-
-        // ledger.processTransaction(new Transaction("txId1", 100, 10, "Note1", masterAccount, testAccount));
-
         Transaction transaction = new Transaction("txId5", -100, 10, "Note", masterAccount, testAccount);
         assertThrows(LedgerException.class, () -> {
             ledger.processTransaction(transaction);
         }, "Transaction Amount Is Out of Range");
     }
+
+    @Test
+    public void testNullBlock() throws LedgerException {
+        assertThrows(LedgerException.class, () -> {
+            ledger.getBlock(2);
+        });
+    }
+
+    // @Test
+    // public void applicationContextTest() {
+    //     SmartStoreApplication.main(new String[] {});
+    // }
 
     // @Test
     // void testGetAccountBalance_AccountDoesNotExist() {
@@ -348,21 +345,22 @@ public class CompleteTest {
 
     // @Test
     // void testGetNumberOfBlocks() {
-    //     // Given
-    //     int expectedNumberOfBlocks = 3;  // Example number of blocks to add
-    
-    //     // Add blocks to the ledger using a possible method
-    //     for (int i = 0; i < expectedNumberOfBlocks; i++) {
-    //         Block newBlock = new Block(i, "somePreviousHash");
-    //         ledger.addBlock(newBlock);  // Assuming there is a method addBlock in the Ledger class
-    //     }
-    
-    //     // When
-    //     int actualNumberOfBlocks = ledger.getNumberOfBlocks();
-    
-    //     // Then
-    //     assertEquals(expectedNumberOfBlocks, actualNumberOfBlocks, "Number of blocks returned is not as expected.");
+    // // Given
+    // int expectedNumberOfBlocks = 3; // Example number of blocks to add
+
+    // // Add blocks to the ledger using a possible method
+    // for (int i = 0; i < expectedNumberOfBlocks; i++) {
+    // Block newBlock = new Block(i, "somePreviousHash");
+    // ledger.addBlock(newBlock); // Assuming there is a method addBlock in the
+    // Ledger class
     // }
-    
+
+    // // When
+    // int actualNumberOfBlocks = ledger.getNumberOfBlocks();
+
+    // // Then
+    // assertEquals(expectedNumberOfBlocks, actualNumberOfBlocks, "Number of blocks
+    // returned is not as expected.");
+    // }
 
 }
