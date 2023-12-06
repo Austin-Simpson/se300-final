@@ -17,6 +17,8 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = {SmartStoreApplication.class})
 public class AccountRepositoryMockTest {
 
+    //TODO: (done) Implement Account Repository Mock Test
+
     @Mock
     private AccountRepository accountRepository;
 

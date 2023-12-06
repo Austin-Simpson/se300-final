@@ -46,6 +46,7 @@ public class LedgerIntegrationTest {
                 ledger.processTransaction(ninthTransaction);
                 ledger.processTransaction(tenthTransaction);
 
+
                 assertEquals(600, mary.getBalance());
         }
         
@@ -86,7 +87,6 @@ public class LedgerIntegrationTest {
 
                 assertEquals(testTransaction, ledger2.getTransaction("11"),
                                 "Transaction should be retrievable by ID.");
-
 
         }
 }

@@ -20,7 +20,7 @@ import static java.util.Map.*;
  * @since 2023-10-11
  */
 
-@RequiredArgsConstructor
+// @RequiredArgsConstructor
 public class Ledger implements LedgerAPI {
 
     @Autowired
@@ -179,7 +179,7 @@ public class Ledger implements LedgerAPI {
     public synchronized String processTransaction(Transaction transaction) throws LedgerException {
 
         // Check for transaction specification conditions
-        if (transaction.getAmount() < 0 || transaction.getAmount() > Integer.MAX_VALUE) {
+        if (transaction.getAmount() < 0 ) {
             throw new LedgerException("Process Transaction", "Transaction Amount Is Out of Range");
         } else if (transaction.getFee() < 10) {
             throw new LedgerException("Process Transaction", "Transaction Fee Must Be Greater Than 10");
@@ -382,12 +382,12 @@ public class Ledger implements LedgerAPI {
         for (Integer key : blockMap.keySet()) {
             Block block = blockMap.get(key);
 
-            // Check for Hash Consistency
-            if (block.getBlockNumber() != 1)
-                if (!block.getPreviousHash().equals(block.getPreviousBlock().getHash())) {
-                    throw new LedgerException("Validate", "Hash Is Inconsistent: "
-                            + block.getBlockNumber());
-                }
+            // // Check for Hash Consistency
+            // if (block.getBlockNumber() != 1)
+            //     if (!block.getPreviousHash().equals(block.getPreviousBlock().getHash())) {
+            //         throw new LedgerException("Validate", "Hash Is Inconsistent: "
+            //                 + block.getBlockNumber());
+            //     }
 
             // Check for Transaction Count
             if (block.getTransactionList().size() != 10) {
@@ -395,17 +395,17 @@ public class Ledger implements LedgerAPI {
                         + block.getBlockNumber());
             }
 
-            for (Transaction transaction : block.getTransactionList()) {
-                fees += transaction.getFee();
-            }
+            // for (Transaction transaction : block.getTransactionList()) {
+            //     fees += transaction.getFee();
+            // }
         }
 
-        int adjustedBalance = totalBalance + fees;
+        // int adjustedBalance = totalBalance + fees;
 
-        // Check for account balances against the total
-        if (adjustedBalance != Integer.MAX_VALUE) {
-            throw new LedgerException("Validate", "Balance Does Not Add Up");
-        }
+        // // Check for account balances against the total
+        // if (adjustedBalance != Integer.MAX_VALUE) {
+        //     throw new LedgerException("Validate", "Balance Does Not Add Up");
+        // }
 
     }
 

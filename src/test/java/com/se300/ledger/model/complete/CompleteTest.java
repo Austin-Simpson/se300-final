@@ -123,6 +123,14 @@ public class CompleteTest {
         assertEquals("NewAddress101", account.getAddress());
     }
 
+    // @Test
+    // public void runMain() {
+    //     SmartStoreApplication.main(new String[] {});
+    // }
+
+    // @Test
+
+
     // // Test for MerkleTree.java:
     // @Test
     // public void testGetSHA2HexValueException() throws NoSuchAlgorithmException {

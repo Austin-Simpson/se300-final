@@ -71,7 +71,6 @@ public class LedgerRestMockControllerTest {
         
         assertEquals("1", transaction.getResponse().getContentAsString());
 
-        
         // TODO:(done) Implement Transaction Mock Retrieval Test Method
         mockMvc.perform(get("/transactions/1")).andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
