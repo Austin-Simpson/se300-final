@@ -9,8 +9,13 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 @SpringBootTest(classes = {TestSmartStoreApplication.class})
 public class MockTest {
@@ -32,5 +37,10 @@ public class MockTest {
         verify(mary, times(1)).getBalance();
 
     }
-    
+
+    // @Test
+    // void testGetSHA2HexValueException() throws NullPointerException {
+    //     MerkleTrees merkleTrees = new MerkleTrees(new ArrayList<>());
+    //     assertThrows(NullPointerException.class, () -> merkleTrees.getSHA2HexValue(null));
+    // }
 }

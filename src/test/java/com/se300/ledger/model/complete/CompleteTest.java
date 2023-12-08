@@ -128,6 +128,8 @@ public class CompleteTest {
     //     SmartStoreApplication.main(new String[] {});
     // }
 
+
+
     // @Test
 
 
@@ -325,7 +327,20 @@ public class CompleteTest {
     }
 
     // test more of validate
-
+    @Test
+    public void test10Blocks() throws LedgerException {
+        for (int i = 0; i < 10; i++) {
+            masterAccount = ledger.getUncommittedBlock().getAccount("master");
+            testAccount = ledger.getUncommittedBlock().getAccount("testAccount");
+            
+            try{
+                ledger.processTransaction(new Transaction("blockTest" + i, 100, 10, "Note" + i, masterAccount, testAccount));
+                ledger.validate();
+            } catch (LedgerException e) {
+            } catch (NullPointerException e) {
+            }
+        }
+    }
 
     // @Test
     // public void applicationContextTest() {

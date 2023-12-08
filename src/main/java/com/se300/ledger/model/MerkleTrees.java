@@ -1,6 +1,7 @@
 package com.se300.ledger.model;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +70,7 @@ public class MerkleTrees {
      *
      * @param str
      * @return
+     * @throws NoSuchAlgorithmException
      */
     public String getSHA2HexValue(String str) {
         byte[] cipher_byte;
